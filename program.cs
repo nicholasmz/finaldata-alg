@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
-//README Hero's Quest: A Console Adventure Game, Hero's Quest is a texT based adventure game where you take on the role of a hero navigating through different rooms.
+
+// README Hero's Quest: A Console Adventure Game
+// Hero's Quest is a text-based adventure game where you take on the role of a hero navigating through different rooms.
+
 // Hero class representing the player's attributes (Strength, Agility, Intelligence, Health)
 public class Hero
 {
@@ -21,14 +24,16 @@ public class Hero
     // Method to display the hero's current stats
     public void DisplayStats()
     {
+        // O(1) - Constant time to display stats
         Console.WriteLine($"Strength: {Strength}, Agility: {Agility}, Intelligence: {Intelligence}, Health: {Health}");
     }
 
     // Method to decrease health by a certain amount of damage
     public void TakeDamage(int damage)
     {
+        // O(1) - Constant time to update health
         Health -= damage;
-        if (Health < 0) Health = 0; // Ensure health doesn't go below 0
+        if (Health < 0) Health = 0;
     }
 }
 
@@ -40,6 +45,7 @@ public class Inventory
     // Constructor to initialize the inventory with a sword and health potion
     public Inventory()
     {
+        // O(1) - Queue initialization and enqueuing two items
         items = new Queue<string>();
         items.Enqueue("Sword");
         items.Enqueue("Health Potion");
@@ -48,6 +54,7 @@ public class Inventory
     // Method to display the current inventory
     public void DisplayInventory()
     {
+        // O(n) - Linear in the number of items (maximum 5)
         Console.WriteLine("\nInventory: ");
         foreach (var item in items)
         {
@@ -58,9 +65,10 @@ public class Inventory
     // Method to add an item to the inventory (if inventory is full, it dequeues the oldest item)
     public void AddItem(string item)
     {
+        // O(1) - Enqueue and Dequeue are constant time operations
         if (items.Count == 5)
         {
-            items.Dequeue(); // Remove the oldest item to make space
+            items.Dequeue();
         }
         items.Enqueue(item);
     }
@@ -107,16 +115,18 @@ public class ChallengeBST
     // Method to add a challenge to the BST
     public void AddChallenge(Challenge challenge)
     {
+        // Average case O(log n), Worst case O(n) if unbalanced
         Root = AddChallenge(Root, challenge);
     }
 
     // Helper method for adding a challenge to the tree
     private BSTNode AddChallenge(BSTNode node, Challenge challenge)
     {
-        if (node == null) return new BSTNode(challenge); // Base case: empty spot in the tree
-        if (challenge.Difficulty < node.Challenge.Difficulty) // Challenges with lower difficulty go to the left
+        // Average case O(log n), Worst case O(n)
+        if (node == null) return new BSTNode(challenge);
+        if (challenge.Difficulty < node.Challenge.Difficulty)
             node.Left = AddChallenge(node.Left, challenge);
-        else // Challenges with higher difficulty go to the right
+        else
             node.Right = AddChallenge(node.Right, challenge);
         return node;
     }
@@ -124,19 +134,18 @@ public class ChallengeBST
     // Method to search for a challenge based on the room number (difficulty)
     public BSTNode SearchChallenge(int roomNumber)
     {
+        // Average case O(log n), Worst case O(n)
         return SearchChallenge(Root, roomNumber);
     }
 
     // Helper method for searching challenges recursively in the tree
     private BSTNode SearchChallenge(BSTNode node, int roomNumber)
     {
-        if (node == null) return null; // Base case: no challenge found
-
-        if (roomNumber == node.Challenge.Difficulty) // Challenge found
+        // Average case O(log n), Worst case O(n)
+        if (node == null) return null;
+        if (roomNumber == node.Challenge.Difficulty)
             return node;
-
-        return (roomNumber < node.Challenge.Difficulty) ? // Search left if room number is less
-            SearchChallenge(node.Left, roomNumber) : SearchChallenge(node.Right, roomNumber); // Search right if room number is greater
+        return (roomNumber < node.Challenge.Difficulty) ? SearchChallenge(node.Left, roomNumber) : SearchChallenge(node.Right, roomNumber);
     }
 }
 
@@ -148,6 +157,7 @@ public class Graph
     // Constructor to initialize the room descriptions
     public Graph()
     {
+        // O(1) for inserting a few items
         RoomDescriptions = new Dictionary<int, string>
         {
             { 1, "You are in a dark room." },
@@ -165,13 +175,15 @@ public class PathTracker
     // Constructor to initialize the visited rooms list
     public PathTracker()
     {
+        // O(1) - List initialization
         visitedRooms = new List<int>();
     }
 
     // Method to mark a room as visited
     public void VisitRoom(int room)
     {
-        if (!visitedRooms.Contains(room)) // Only mark the room as visited if not already visited
+        // O(n) - Checking Contains is O(n), adding is O(1)
+        if (!visitedRooms.Contains(room))
         {
             visitedRooms.Add(room);
         }
@@ -180,16 +192,18 @@ public class PathTracker
     // Method to backtrack (remove the last visited room from the list)
     public void Backtrack()
     {
+        // O(1) - Removing last item is constant time
         if (visitedRooms.Count > 1)
         {
-            visitedRooms.RemoveAt(visitedRooms.Count - 1); // Remove the last room
+            visitedRooms.RemoveAt(visitedRooms.Count - 1);
         }
     }
 
     // Method to check if a room has been visited
     public bool IsRoomVisited(int room)
     {
-        return visitedRooms.Contains(room); // Return true if the room is in the visited list
+        // O(n) - Linear search
+        return visitedRooms.Contains(room);
     }
 }
 
@@ -208,13 +222,14 @@ public class Treasure
     // Static method to randomly generate a treasure (10% chance to get Gold)
     public static Treasure GenerateTreasure()
     {
+        // O(1) - Random generation and simple check
         Random rand = new Random();
-        int chance = rand.Next(1, 101); // Random number between 1 and 100
-        if (chance <= 10) // 10% chance to find Gold
+        int chance = rand.Next(1, 101);
+        if (chance <= 10)
         {
             return new Treasure("Gold", "+5 Strength");
         }
-        return null; // No treasure found
+        return null;
     }
 }
 
@@ -230,13 +245,14 @@ public class Game
     // Constructor to initialize the game objects
     public Game()
     {
+        // O(1) - Initialization of game components
         hero = new Hero(5, 7, 8);
         inventory = new Inventory();
         map = new Graph();
         challengeTree = new ChallengeBST();
         pathTracker = new PathTracker();
 
-        // Adding challenges with varying difficulties
+        // Adding challenges - O(log n) each insertion (average)
         challengeTree.AddChallenge(new Challenge(6, "Combat"));
         challengeTree.AddChallenge(new Challenge(5, "Trap"));
         challengeTree.AddChallenge(new Challenge(8, "Puzzle"));
@@ -250,34 +266,34 @@ public class Game
 
         while (hero.Health > 0)
         {
-            Console.Clear(); // Clear the screen for fresh output
+            Console.Clear(); // O(1)
             Console.WriteLine("\nCurrent Room: " + currentRoom);
-            Console.WriteLine(map.RoomDescriptions[currentRoom]); // Display the current room description
-            hero.DisplayStats(); // Display the hero's stats
-            inventory.DisplayInventory(); // Display the inventory
+            Console.WriteLine(map.RoomDescriptions[currentRoom]); // O(1) dictionary lookup
+            hero.DisplayStats(); // O(1)
+            inventory.DisplayInventory(); // O(n), where n <= 5
 
             // Handle any challenges in the current room
-            BSTNode challengeNode = challengeTree.SearchChallenge(currentRoom);
+            BSTNode challengeNode = challengeTree.SearchChallenge(currentRoom); // O(log n) average
             if (challengeNode != null)
             {
                 HandleChallenge(challengeNode.Challenge);
             }
 
             // Randomly generate a treasure item with a 10% chance
-            Treasure treasure = Treasure.GenerateTreasure();
+            Treasure treasure = Treasure.GenerateTreasure(); // O(1)
             if (treasure != null)
             {
                 Console.WriteLine($"You found {treasure.Name}, which boosts {treasure.Effect}");
                 if (treasure.Effect == "+5 Strength")
                 {
-                    hero.Strength += 5; // Increase the hero's strength if they found Gold
+                    hero.Strength += 5;
                 }
             }
 
             // Automatic action: randomly choose the next move
             Console.WriteLine("\nAutomatic Action:");
             Random rand = new Random();
-            int choice = rand.Next(1, 4); // Randomly choose an action: 1 (Room 2), 2 (Room 3), or 3 (Backtrack)
+            int choice = rand.Next(1, 4); // O(1)
             Console.WriteLine($"Choosing option {choice}");
 
             // Update the current room based on the choice
@@ -291,18 +307,16 @@ public class Game
             }
             else if (choice == 3)
             {
-                pathTracker.Backtrack();
-                if (pathTracker.IsRoomVisited(1)) currentRoom = 1;
+                pathTracker.Backtrack(); // O(1)
+                if (pathTracker.IsRoomVisited(1)) currentRoom = 1; // O(n)
                 else currentRoom = 2;
             }
 
-            pathTracker.VisitRoom(currentRoom);
+            pathTracker.VisitRoom(currentRoom); // O(n) (due to Contains check)
 
-            // End the game if the player reaches the final room (Room 3)
-            if (currentRoom == 3) break;
+            if (currentRoom == 3) break; // Exit if at final room
         }
 
-        // Display the end message based on the hero's health
         if (hero.Health <= 0)
         {
             Console.WriteLine("Game Over! You couldn't survive.");
@@ -316,6 +330,7 @@ public class Game
     // Method to handle challenges (Combat, Trap, Puzzle) based on hero's stats
     private void HandleChallenge(Challenge challenge)
     {
+        // O(1) - Constant time logic
         Console.WriteLine($"You encountered a {challenge.Type} challenge with difficulty {challenge.Difficulty}.");
         if (challenge.Type == "Combat" && hero.Strength >= challenge.Difficulty)
         {
@@ -334,7 +349,7 @@ public class Game
             int damage = challenge.Difficulty - (hero.Strength + hero.Agility + hero.Intelligence) / 3;
             if (damage > 0)
             {
-                hero.TakeDamage(damage); // Player takes damage if they fail the challenge
+                hero.TakeDamage(damage);
                 Console.WriteLine($"You failed the challenge and lost {damage} health.");
             }
             else
