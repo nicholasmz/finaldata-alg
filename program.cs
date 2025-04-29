@@ -375,17 +375,22 @@ public class Game
                 }
                 else if (map.Connections[currentRoom].Contains(choice))
                 {
+                    // Valid room choice
                     currentRoom = choice;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid choice! Moving randomly...");
+                    Console.WriteLine("Invalid choice! That room is not connected to your current location. Moving randomly...");
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
                     currentRoom = map.Connections[currentRoom][rand.Next(map.Connections[currentRoom].Count)];
                 }
             }
             else
             {
-                Console.WriteLine("Invalid input! Moving randomly...");
+                Console.WriteLine("Invalid input! Please enter a number. Moving randomly...");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
                 currentRoom = map.Connections[currentRoom][rand.Next(map.Connections[currentRoom].Count)];
             }
 
@@ -446,5 +451,3 @@ public class Program
         game.Play();
     }
 }
-
-//FULL VERSION , I MANAGE TO MAKE IT WORK ON A C# COMPILER 
